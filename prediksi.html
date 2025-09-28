@@ -1,0 +1,205 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generator Ayutogel</title>
+    <style>
+        body {
+            background-image: url('https://media1.tenor.com/m/BShXaBf-x_0AAAAd/funky-foxes-dance.gif');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            color: white;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+        }
+        .container {
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            max-width: 800px;
+        }
+        h1 {
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        ul li {
+            margin: 10px 0;
+            font-size: 20px;
+            color: #b90e32;
+        }
+        ul li a {
+            color: #b90e32;
+            text-decoration: none;
+        }
+        ul li a:hover {
+            text-decoration: underline;
+        }
+        .generate-button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #b90e32;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .prediction-container {
+            display: none; /* Initially hidden */
+            flex-wrap: wrap;
+            justify-content: center;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        .prediction {
+            width: calc(70% - 20px);
+            background-color: rgba(255, 255, 255, 0.1);
+            margin: 10px;
+            padding: 26px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 16px;
+            line-height: 1.2;
+        }
+        .bold {
+            font-weight: bold;
+        }
+        .gif-container {
+            margin-top: 20px;
+        }
+        #pasteNotice {
+            color: yellow;
+            font-size: 14px;
+            visibility: hidden; /* Initially hidden */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 id="tanggal">Tanggal: 20 Oktober 2024</h1>
+        <ul>
+            <li><a href="PASARAN HONGKONG.html">PASARAN HONGKONG</a></li>
+            <li><a href="PASARAN SGP PRIZE 123.html">PASARAN SGP PRIZE 123</a></li>
+            <li><a href="PASARAN SGP TOTO.html">PASARAN SGP TOTO</a></li>
+            <li><a href="PASARAN SYDNEY.html">PASARAN SYDNEY</a></li>
+            <li><a href="THREADS SDY, SGP, HK.html">THREADS SDY, SGP, HK</a></li>
+            <li><a href="THREADS SDY, HK.html">THREADS SDY, HK</a></li>
+        </ul>
+        <button class="generate-button" onclick="updatePageContent()">Generate Prediksi</button>
+        <p id="pasteNotice" style="visibility: hidden;">Paste Pada Wordpress Prediksi Menggunakan Tombol Ctrl + Shift + V</p>
+        <div id="predictions" class="prediction-container"></div>
+        <div class="gif-container">
+            <img src="https://cdn.bunkerkiamat.com/ayutogel/images/logo/Ayutogel.gif" alt="Ayutogel">
+        </div>
+    </div>
+
+    <script>
+        function getRandomNumber(length) {
+            let result = '';
+            const characters = '0123456789';
+            const charactersLength = characters.length;
+            for (let i = 0; i < length; i++) {
+                result += characters.charAt(Math.floor(Math.random() * charactersLength));
+            }
+            return result;
+        }
+
+        function getFormattedDate() {
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            const today = new Date();
+            return today.toLocaleDateString('en-ID', options);
+        }
+
+        function generatePredictions() {
+            const shioAnimals = ["Naga", "Ayam", "Babi", "Ular", "Tikus"];
+            const cities = [
+                { name: "PHNOMPENH-LOTTO", closeTime: "11:35 WIB", openTime: "11:50 WIB", openDays: "Buka Setiap Hari." },
+                { name: "SYDNEY", closeTime: "13:49 WIB", openTime: "14:05 WIB", openDays: "Buka Setiap Hari." },
+                { name: "SINGAPORE", closeTime: "17:30 WIB", openTime: "17:40 WIB", openDays: "Buka Setiap Hari." },
+                { name: "DUBAI", closeTime: "19:30 WIB", openTime: "19:50 WIB", openDays: "Buka Setiap Hari." },
+                { name: "TAIPEI", closeTime: "21:00 WIB", openTime: "21:15 WIB", openDays: "Buka Setiap Hari." },
+                { name: "HONGKONG", closeTime: "22:59 WIB", openTime: "23:15 WIB", openDays: "Buka Setiap Hari." },
+                { name: "SEOUL", closeTime: "23:30 WIB", openTime: "23:50 WIB", openDays: "Buka Setiap Hari." }
+            ];
+            const predictions = [];
+            const date = getFormattedDate();
+            const today = new Date();
+            const day = today.getDay(); // Sunday - 0, Monday - 1, ..., Saturday - 6
+
+            cities.forEach(city => {
+                const shio = shioAnimals[Math.floor(Math.random() * shioAnimals.length)];
+                let openDays = city.openDays;
+                if (city.name === "SINGAPORE" && (day === 2 || day === 5)) { // 2 is Tuesday, 5 is Friday
+                    openDays = 'SELASA DAN JUMAT TIDAK PERLU POST';
+                    predictions.push({
+                        city: city.name,
+                        date: date,
+                        specialMessage: openDays
+                    });
+                } else {
+                    predictions.push({
+                        city: city.name,
+                        closeTime: city.closeTime,
+                        openTime: city.openTime,
+                        openDays: openDays,
+                        bbfs: getRandomNumber(9),
+                        ikut: getRandomNumber(4),
+                        colokBebas: `${getRandomNumber(1)}/${getRandomNumber(1)}`,
+                        colokMacau: `${getRandomNumber(2)}/${getRandomNumber(2)}/${getRandomNumber(2)}`,
+                        top10: `${getRandomNumber(2)}* ${getRandomNumber(2)}* ${getRandomNumber(2)}* ${getRandomNumber(2)}* ${getRandomNumber(2)}* ${getRandomNumber(2)}* ${getRandomNumber(2)}* ${getRandomNumber(2)}* ${getRandomNumber(2)}* ${getRandomNumber(2)}*`,
+                        shio: shio,
+                        date: date
+                    });
+                }
+            });
+            return predictions;
+        }
+
+        function updatePageContent() {
+            const predictions = generatePredictions();
+            const predictionsContainer = document.getElementById('predictions');
+            predictionsContainer.innerHTML = ''; // Clear existing content if any
+            predictions.forEach(prediction => {
+                const predictionElement = document.createElement('div');
+                predictionElement.classList.add('prediction', 'bold');
+                if (prediction.specialMessage) {
+                    predictionElement.innerHTML = `<strong>${prediction.specialMessage}</strong>`;
+                } else {
+                    predictionElement.innerHTML = `
+                        <strong>PREDIKSI Angka Jitu ${prediction.city}, ${prediction.date}</strong><br>
+                        <strong>Jam Tutup: ${prediction.closeTime}, Jam Buka: ${prediction.openTime}</strong><br>
+                        <strong>${prediction.openDays}</strong><br>
+                        <strong>Angka BBFS: ${prediction.bbfs}</strong><br>
+                        <strong>Angka Ikut: ${prediction.ikut}</strong><br>
+                        <strong>Colok Bebas: ${prediction.colokBebas}</strong><br>
+                        <strong>Colok Macau: ${prediction.colokMacau}</strong><br>
+                        <strong>Top 10 2D Bolak Balik:</strong><br>
+                        <strong>${prediction.top10}</strong><br>
+                        <strong>Shio: ${prediction.shio}</strong><br>
+                    `;
+                }
+                predictionsContainer.appendChild(predictionElement);
+            });
+            predictionsContainer.style.display = 'flex'; // Display the prediction container
+            document.getElementById('pasteNotice').style.visibility = 'visible'; // Make the paste notice visible after content update
+        }
+
+        // Display the date when the page is loaded
+        document.getElementById('tanggal').innerText = `Tanggal: ${getFormattedDate()}`;
+    </script>
+</body>
+</html>
