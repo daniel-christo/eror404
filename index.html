@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <title>Bonus Scatter Mahjong Ways</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-image: url('https://media1.tenor.com/m/BShXaBf-x_0AAAAd/funky-foxes-dance.gif');
+      background-size: cover
+      color: #ffb6d9;
+      padding: 30px;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    h2 {
+      font-size: 26px;
+      margin-bottom: 20px;
+      font-weight: 600;
+      color: #ff4fc7;
+      text-shadow: 0 0 5px #ff4fc733;
+      letter-spacing: 1px;
+    }
+
+    textarea {
+      width: 90%;
+      max-width: 800px;
+      height: 250px;
+      font-family: monospace;
+      font-size: 14px;
+      background-color: #1a1a1a;
+      color: #ffc8dd;
+      border: 1px solid #ff69b4;
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 20px;
+      resize: vertical;
+    }
+
+    .button-container {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    button {
+      padding: 8px 16px;
+      font-weight: bold;
+      background: #ff69b41a;
+      color: #ffb6d9;
+      border: 1px solid #ff69b4;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+      font-size: 13px;
+    }
+
+    button:hover {
+      background: #ff69b4;
+      color: #000;
+      box-shadow: 0 0 10px #ff4fc7aa;
+    }
+
+    table {
+      width: 100%;
+      max-width: 1000px;
+      margin-top: 20px;
+      border-collapse: collapse;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 0 10px #ff4fc722;
+    }
+
+    th, td {
+      padding: 10px;
+      text-align: center;
+      border: 1px solid #ff69b433;
+    }
+
+    th {
+      background: #1a1a1a;
+      color: #ff4fc7;
+      font-weight: 600;
+    }
+
+    td {
+      background: #000;
+      color: #ffc8dd;
+    }
+  </style>
+</head>
+<body>
+
+<h2>Bonus Scatter Mahjong Ways</h2>
+
+<textarea id="inputData" placeholder="Tempelkan data transaksi kamu di sini..."></textarea>
+
+<div class="button-container">
+  <button onclick="prosesData()">Proses Data</button>
+  <button type="button" onclick="window.location.href='https://711-hub.github.io/opr/#'">Kembali</button>
+</div>
+
+<table id="resultTable" style="display: none;">
+  <thead>
+    <tr>
+      <th>USER ID</th>
+      <th>NAMA REKENING</th>
+      <th>NOMOR REKENING</th>
+      <th>PERMAINAN</th>
+      <th>KODE TICKET</th>
+      <th>TOTAL KEMENANGAN</th>
+      <th>NILAI TARUHAN</th>
+      <th>SALIN</th>
+      <th>SELISIH</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+<script>
+function prosesData() {
+  const input = document.getElementById('inputData').value;
+  const lines = input.split('\n').map(line => line.trim()).filter(line => line !== '');
+
+  const grouped = {};
+  let currentPeriode = '';
+  let currentUser = '';
+  let currentGame = '';
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+
+    // Tangkap nama game
+    if (line.toLowerCase().includes('mahjong ways')) currentGame = line;
+
+    // Tangkap USER ID
+    if (/^[a-zA-Z0-9_]+$/.test(line) &&
+        !line.toLowerCase().includes('credit') &&
+        !line.toLowerCase().includes('debit') &&
+        !line.toLowerCase().includes('ext') &&
+        !line.toLowerCase().includes('pgsoft')) {
+      currentUser = line;
+    }
+
+    // Tangkap Ext. ID dan periode
+    if (line.includes('Ext. ID')) {
+      const match = line.match(/Ext\. ID\s*:\s*([0-9\-]+)/);
+      if (match) {
+        const parts = match[1].split('-');
+        currentPeriode = parts[1];
+
+        if (!grouped[currentPeriode]) {
+          grouped[currentPeriode] = {
+            user: '',
+            game: '',
+            credit: 0,
+            debit: 0
+          };
+        }
+
+        grouped[currentPeriode].user = currentUser;
+        grouped[currentPeriode].game = currentGame;
+      }
+    }
+
+    // Credit
+    if (line.startsWith('Credit')) {
+      const nextLine = lines[i + 1] || '';
+      const amount = parseInt(nextLine.replace(/[^\d]/g, ''), 10);
+      if (!isNaN(amount) && grouped[currentPeriode]) {
+        grouped[currentPeriode].credit += amount;
+      }
+    }
+
+    // Debit
+    if (line.startsWith('Debit')) {
+      const nextLine = lines[i + 1] || '';
+      const amount = parseInt(nextLine.replace(/[^\d]/g, ''), 10);
+      if (!isNaN(amount) && grouped[currentPeriode]) {
+        grouped[currentPeriode].debit += amount;
+      }
+    }
+  }
+
+  const table = document.getElementById('resultTable');
+  const tbody = table.querySelector('tbody');
+  tbody.innerHTML = '';
+  table.style.display = 'table';
+
+  Object.entries(grouped).forEach(([periode, data]) => {
+    const selisih = data.credit - data.debit;
+    const row = document.createElement('tr');
+
+    const rowData = [
+      data.user,
+      '',
+      '',
+      data.game,
+      periode,
+      data.credit.toString(),
+      data.debit.toString()
+    ];
+
+    // Buat setiap kolom data
+    rowData.forEach(col => {
+      const td = document.createElement('td');
+      td.textContent = col;
+      row.appendChild(td);
+    });
+
+    // Kolom tombol salin
+    const salinTd = document.createElement('td');
+    const salinBtn = document.createElement('button');
+    salinBtn.textContent = 'Salin';
+    salinBtn.onclick = () => {
+      const tempTextArea = document.createElement('textarea');
+      tempTextArea.value = rowData.join('\t');
+      document.body.appendChild(tempTextArea);
+      tempTextArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(tempTextArea);
+      salinBtn.textContent = 'Tersalin!';
+      setTimeout(() => salinBtn.textContent = 'Salin', 1500);
+    };
+    salinTd.appendChild(salinBtn);
+    row.appendChild(salinTd);
+
+    // Kolom selisih
+    const selisihTd = document.createElement('td');
+    selisihTd.textContent = selisih.toString();
+    row.appendChild(selisihTd);
+
+    tbody.appendChild(row);
+  });
+}
+</script>
+
+</body>
+</html>
